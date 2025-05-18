@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AnkiDroid Flashcard Web App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background: #f2f5f9;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input, textarea, button {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 0.3rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    .btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      margin-top: 1rem;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+
+    .card-view {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .card {
+      padding: 2rem;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+      margin: 1rem auto;
+      width: 100%;
+      max-width: 400px;
+      cursor: pointer;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+    }
+
+    .controls button {
+      width: 48%;
+    }
+
+    .download-section, .import-section, .progress {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .download-btn {
+      background: #28a745;
+    }
+
+    .download-btn:hover {
+      background: #218838;
+    }
+
+    .import-btn {
+      background: #17a2b8;
+    }
+
+    .import-btn:hover {
+      background: #117a8b;
+    }
+
+    .progress-bar {
+      width: 100%;
+      background-color: #e9ecef;
+      border-radius: 5px;
+      margin-top: 0.5rem;
+    }
+
+    .progress-bar-fill {
+      height: 20px;
+      background-color: #007bff;
+      border-radius: 5px;
+      width: 0%;
+      color: white;
+      text-align: center;
+      line-height: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>AnkiDroid Flashcard Web App</h1>
+
+<!-- Add Flashcard Manually -->
+<div>
+  <div class="form-group">
+    <label for="front">Front (Question)</label>
+    <input type="text" id="front" placeholder="Enter front text">
+  </div>
+  <div class="form-group">
+    <label for="back">Back (Answer)</label>
+    <textarea id="back" rows="3" placeholder="Enter back text"></textarea>
+  </div>
+  <button class="btn" onclick="addFlashcard()">Add Flashcard</button>
+</div>
+
+<!-- Import from Online CSV -->
+<div class="import-section">
+  <label for="csvUrl">Import from CSV URL</label>
+  <input type="text" id="csvUrl" placeholder="https://example.com/cards.csv">
+  <button class="btn import-btn" onclick="importFromUrl()">Import Flashcards</button>
+</div>
+
+<!-- Flashcard Viewer -->
+<div class="card-view" id="cardView" style="display:none;">
+  <div class="card" onclick="flipCard()">
+    <div id="cardText"></div>
+  </div>
+  <div class="controls">
+    <button onclick="prevCard()">Previous</button>
+    <button onclick="markAsCompleteAndNext()">Mark Complete & Next</button>
+  </div>
+</div>
+
+<!-- Progress Bar -->
+<div class="progress" id="progressSection" style="display:none;">
+  <strong>Progress:</strong> <span id="progressText">0/0 completed</span>
+  <div class="progress-bar">
+    <div id="progressBar" class="progress-bar-fill">0%</div>
+  </div>
+</div>
+
+<!-- Download CSV -->
+<div class="download-section">
+  <button class="btn download-btn" onclick="downloadCards()">Download CSV</button>
+</div>
+
+<script>
+  let cards = JSON.parse(localStorage.getItem('flashcards')) || [];
+  let completedCards = JSON.parse(localStorage.getItem('completed')) || [];
+  let currentIndex = 0;
+  let showFront = true;
+
+  function addFlashcard() {
+    const front = document.getElementById('front').value.trim();
+    const back = document.getElementById('back').value.trim();
+    if (!front || !back) return alert("Both fields are required!");
+
+    cards.push({ front, back });
+    localStorage.setItem('flashcards', JSON.stringify(cards));
+    document.getElementById('front').value = '';
+    document.getElementById('back').value = '';
+    alert("Flashcard added!");
+    showCard();
+  }
+
+  function showCard() {
+    if (cards.length === 0) return;
+    document.getElementById('cardView').style.display = 'block';
+    document.getElementById('progressSection').style.display = 'block';
+    showFront = true;
+    updateProgress();
+    document.getElementById('cardText').textContent = cards[currentIndex].front;
+  }
+
+  function flipCard() {
+    if (cards.length === 0) return;
+    const card = cards[currentIndex];
+    showFront = !showFront;
+    document.getElementById('cardText').textContent = showFront ? card.front : card.back;
+  }
+
+  function nextCard() {
+    if (cards.length === 0) return;
+    currentIndex = (currentIndex + 1) % cards.length;
+    showCard();
+  }
+
+  function prevCard() {
+    if (cards.length === 0) return;
+    currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+    showCard();
+  }
+
+  function markAsCompleteAndNext() {
+    const id = currentIndex;
+    if (!completedCards.includes(id)) completedCards.push(id);
+    localStorage.setItem('completed', JSON.stringify(completedCards));
+    nextCard();
+  }
+
+  function updateProgress() {
+    const total = cards.length;
+    const done = completedCards.length;
+    const percent = Math.floor((done / total) * 100);
+    document.getElementById('progressText').textContent = `${done}/${total} completed`;
+    document.getElementById('progressBar').style.width = percent + '%';
+    document.getElementById('progressBar').textContent = percent + '%';
+  }
+
+  function downloadCards() {
+    if (cards.length === 0) return alert("No flashcards to download.");
+
+    let csvContent = "data:text/csv;charset=utf-8,Front,Back\n";
+    cards.forEach(card => {
+      const row = `"${card.front.replace(/"/g, '""')}","${card.back.replace(/"/g, '""')}"`;
+      csvContent += row + "\n";
+    });
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "flashcards.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  async function importFromUrl() {
+    const url = document.getElementById('csvUrl').value.trim();
+    if (!url) return alert("Please enter a CSV URL.");
+
+    try {
+      const response = await fetch(url);
+      const data = await response.text();
+      const lines = data.trim().split("\n").slice(1); // skip header
+      const newCards = lines.map(line => {
+        const [front, back] = line.split(',');
+        return { front: front.replace(/"/g, '').trim(), back: back.replace(/"/g, '').trim() };
+      });
+      cards = cards.concat(newCards);
+      localStorage.setItem('flashcards', JSON.stringify(cards));
+      alert("Flashcards imported successfully!");
+      showCard();
+    } catch (err) {
+      alert("Failed to fetch flashcards. Make sure the URL is correct and CORS is enabled.");
+      console.error(err);
+    }
+  }
+
+  // Load existing flashcards on start
+  if (cards.length > 0) showCard();
+</script>
+
+</body>
+</html>
