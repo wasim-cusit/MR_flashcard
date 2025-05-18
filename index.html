@@ -11,20 +11,9 @@
       max-width: 800px;
       margin: auto;
     }
-
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-
-    .form-group {
-      margin-bottom: 1rem;
-    }
-
-    label {
-      font-weight: bold;
-    }
-
+    h1 { text-align: center; color: #333; }
+    .form-group { margin-bottom: 1rem; }
+    label { font-weight: bold; }
     input, textarea, button {
       width: 100%;
       padding: 0.7rem;
@@ -33,7 +22,6 @@
       border: 1px solid #ccc;
       box-sizing: border-box;
     }
-
     .btn {
       background-color: #007bff;
       color: white;
@@ -41,16 +29,11 @@
       margin-top: 1rem;
       cursor: pointer;
     }
-
-    .btn:hover {
-      background-color: #0056b3;
-    }
-
+    .btn:hover { background-color: #0056b3; }
     .card-view {
       margin-top: 2rem;
       text-align: center;
     }
-
     .card {
       padding: 2rem;
       background: white;
@@ -61,45 +44,26 @@
       max-width: 400px;
       cursor: pointer;
     }
-
     .controls {
       display: flex;
       justify-content: space-between;
       margin-top: 1rem;
     }
-
-    .controls button {
-      width: 48%;
-    }
-
+    .controls button { width: 48%; }
     .download-section, .import-section, .progress {
       margin-top: 2rem;
       text-align: center;
     }
-
-    .download-btn {
-      background: #28a745;
-    }
-
-    .download-btn:hover {
-      background: #218838;
-    }
-
-    .import-btn {
-      background: #17a2b8;
-    }
-
-    .import-btn:hover {
-      background: #117a8b;
-    }
-
+    .download-btn { background: #28a745; }
+    .download-btn:hover { background: #218838; }
+    .import-btn { background: #17a2b8; }
+    .import-btn:hover { background: #117a8b; }
     .progress-bar {
       width: 100%;
       background-color: #e9ecef;
       border-radius: 5px;
       margin-top: 0.5rem;
     }
-
     .progress-bar-fill {
       height: 20px;
       background-color: #007bff;
@@ -132,7 +96,14 @@
 <div class="import-section">
   <label for="csvUrl">Import from CSV URL</label>
   <input type="text" id="csvUrl" placeholder="https://example.com/cards.csv">
-  <button class="btn import-btn" onclick="importFromUrl()">Import Flashcards</button>
+  <button class="btn import-btn" onclick="importFromUrl()">Import from URL</button>
+</div>
+
+<!-- 📂 Import from Local File -->
+<div class="import-section">
+  <label for="localFile">Import CSV from Device</label>
+  <input type="file" id="localFile" accept=".csv">
+  <button class="btn import-btn" onclick="handleLocalCSVUpload()">Import from File</button>
 </div>
 
 <!-- Flashcard Viewer -->
@@ -224,7 +195,6 @@
 
   function downloadCards() {
     if (cards.length === 0) return alert("No flashcards to download.");
-
     let csvContent = "data:text/csv;charset=utf-8,Front,Back\n";
     cards.forEach(card => {
       const row = `"${card.front.replace(/"/g, '""')}","${card.back.replace(/"/g, '""')}"`;
@@ -243,11 +213,10 @@
   async function importFromUrl() {
     const url = document.getElementById('csvUrl').value.trim();
     if (!url) return alert("Please enter a CSV URL.");
-
     try {
       const response = await fetch(url);
       const data = await response.text();
-      const lines = data.trim().split("\n").slice(1); // skip header
+      const lines = data.trim().split("\n").slice(1);
       const newCards = lines.map(line => {
         const [front, back] = line.split(',');
         return { front: front.replace(/"/g, '').trim(), back: back.replace(/"/g, '').trim() };
@@ -257,12 +226,33 @@
       alert("Flashcards imported successfully!");
       showCard();
     } catch (err) {
-      alert("Failed to fetch flashcards. Make sure the URL is correct and CORS is enabled.");
+      alert("Failed to fetch flashcards. Check the URL and CORS policy.");
       console.error(err);
     }
   }
 
-  // Load existing flashcards on start
+  function handleLocalCSVUpload() {
+    const fileInput = document.getElementById('localFile');
+    const file = fileInput.files[0];
+    if (!file) return alert("Please select a file first.");
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const text = e.target.result;
+      const lines = text.trim().split("\n").slice(1);
+      const newCards = lines.map(line => {
+        const [front, back] = line.split(',');
+        return { front: front.replace(/"/g, '').trim(), back: back.replace(/"/g, '').trim() };
+      });
+      cards = cards.concat(newCards);
+      localStorage.setItem('flashcards', JSON.stringify(cards));
+      alert("Flashcards imported from local file!");
+      showCard();
+    };
+    reader.readAsText(file);
+  }
+
+  // Load existing cards on page load
   if (cards.length > 0) showCard();
 </script>
 
