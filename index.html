@@ -458,73 +458,78 @@
       margin-right: 8px;
     }
 
-
-    /* About my footer */
+    /* Footer styles */
     .footer {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-            padding: 30px 0;
-            text-align: center;
-            border-top: 1px solid #e1e1e1;
-            margin-top: 40px;
-        }
-        
-        .footer-name {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 5px;
-        }
-        
-        .footer-title {
-            font-size: 1rem;
-            color: #7f8c8d;
-            margin-bottom: 20px;
-            font-weight: 400;
-        }
-        
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .footer-link {
-            display: flex;
-            align-items: center;
-            color: #3498db;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .footer-link:hover {
-            color: #2980b9;
-        }
-        
-        .footer-link i {
-            margin-right: 8px;
-            font-size: 1.1rem;
-        }
-        
-        .footer-quote {
-            font-style: italic;
-            color: #555;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 0 20px;
-            line-height: 1.5;
-        }
-        
-        @media (max-width: 600px) {
-            .footer-links {
-                flex-direction: column;
-                gap: 10px;
-                padding-left: 2.3125rem;
-            }
-        }
-
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      padding: 30px 0;
+      text-align: center;
+      border-top: 1px solid #e1e1e1;
+      margin-top: 40px;
+    }
+    
+    .footer-name {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 5px;
+    }
+    
+    .footer-title {
+      font-size: 1rem;
+      color: #7f8c8d;
+      margin-bottom: 20px;
+      font-weight: 400;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .footer-link {
+      display: flex;
+      align-items: center;
+      color: #3498db;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    .footer-link:hover {
+      color: #2980b9;
+    }
+    
+    .footer-link i {
+      margin-right: 8px;
+      font-size: 1.1rem;
+    }
+    
+    .footer-quote {
+      font-style: italic;
+      color: #555;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 20px;
+      line-height: 1.5;
+    }
+    
+    /* Button styles */
+    .btn-secondary {
+      color: white;
+      background-color: #6c757d;
+      border-color: #6c757d;
+    }
+    .btn-secondary:hover {
+      background-color: #5a6268;
+      border-color: #545b62;
+    }
+    
+    .progress-info span {
+      margin-right: 15px;
+    }
     
     /* Responsive adjustments */
     @media (max-width: 576px) {
@@ -549,11 +554,17 @@
         width: 50px;
         height: 50px;
       }
+      
+      @media (max-width: 600px) {
+        .footer-links {
+          flex-direction: column;
+          gap: 10px;
+          padding-left: 2.3125rem;
+        }
+      }
     }
-  </style>
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-      rel="stylesheet">
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
   </head>
   <body>
     <header>
@@ -596,8 +607,7 @@
               <div id="frontText" class="card-text"></div>
               <img id="frontImage" class="card-image" style="display: none;">
             </div>
-            <div id="backContent" class="card-side"
-              style="display: none; transform: rotateY(0deg);">
+            <div id="backContent" class="card-side" style="display: none; transform: rotateY(0deg);">
               <div id="backText" class="card-text"></div>
               <img id="backImage" class="card-image" style="display: none;">
             </div>
@@ -606,20 +616,36 @@
             <button id="prevBtn" class="btn btn-primary">
               <i class="fas fa-arrow-left"></i> Previous
             </button>
-            <button id="nextBtn" class="btn btn-success">
+            <button id="failBtn" class="btn btn-danger">
+              <i class="fas fa-times"></i> Failed
+            </button>
+            <button id="knowBtn" class="btn btn-success">
               <i class="fas fa-check"></i> Know It
+            </button>
+            <button id="neutralNextBtn" class="btn btn-secondary">
+              <i class="fas fa-arrow-right"></i> Next
             </button>
           </div>
         </div>
-        <div id="progressContainer" class="progress-container"
-          style="display: none;">
+
+        <div id="progressContainer" class="progress-container" style="display: none;">
           <div class="progress-info">
             <span id="progressText">0/0 cards mastered</span>
-            <span id="progressPercent">0%</span>
+            <span id="progressPercent">0% Mastery</span>
           </div>
           <div class="progress-bar">
-            <div id="progressBar" class="progress-bar-fill"
-              style="width: 0%"></div>
+            <div id="progressBar" class="progress-bar-fill" style="width: 0%"></div>
+          </div>
+          <div id="resultsContainer" style="margin-top: 15px; display: none;">
+            <div class="progress-info">
+              <span><i class="fas fa-check-circle" style="color: var(--success);"></i> <span id="correctCount">0</span> Correct</span>
+              <span><i class="fas fa-times-circle" style="color: var(--danger);"></i> <span id="failedCount">0</span> Failed</span>
+              <span><i class="fas fa-redo" style="color: var(--accent);"></i> <span id="seenCount">0</span> Seen</span>
+            </div>
+            <div class="progress-info" style="margin-top: 10px;">
+              <span><i class="fas fa-trophy" style="color: var(--warning);"></i> <span id="masteryRate">0</span>% Mastered</span>
+              <span><i class="fas fa-chart-line" style="color: var(--info);"></i> <span id="successRate">0</span>% Success Rate</span>
+            </div>
           </div>
         </div>
 
@@ -641,28 +667,22 @@
           </h3>
           <div class="form-group">
             <label for="front" class="form-label">Front (Question)</label>
-            <input type="text" id="front" class="form-control"
-              placeholder="Enter question or term">
+            <input type="text" id="front" class="form-control" placeholder="Enter question or term">
           </div>
           <div class="form-group">
-            <label for="frontImage" class="form-label">Front Image
-              (Optional)</label>
-            <input type="file" id="frontImageInput" class="form-control"
-              accept="image/*">
+            <label for="frontImage" class="form-label">Front Image (Optional)</label>
+            <input type="file" id="frontImageInput" class="form-control" accept="image/*">
             <div class="image-preview-container">
               <img id="frontImagePreview" class="image-preview">
             </div>
           </div>
           <div class="form-group">
             <label for="back" class="form-label">Back (Answer)</label>
-            <textarea id="back" class="form-control"
-              placeholder="Enter answer or definition"></textarea>
+            <textarea id="back" class="form-control" placeholder="Enter answer or definition"></textarea>
           </div>
           <div class="form-group">
-            <label for="backImage" class="form-label">Back Image
-              (Optional)</label>
-            <input type="file" id="backImageInput" class="form-control"
-              accept="image/*">
+            <label for="backImage" class="form-label">Back Image (Optional)</label>
+            <input type="file" id="backImageInput" class="form-control" accept="image/*">
             <div class="image-preview-container">
               <img id="backImagePreview" class="image-preview">
             </div>
@@ -699,13 +719,11 @@
             </div>
             <div id="fileImportGroup" class="form-group">
               <label for="importFile" class="form-label">Select File</label>
-              <input type="file" id="importFile" class="form-control"
-                accept=".csv,.json">
+              <input type="file" id="importFile" class="form-control" accept=".csv,.json">
             </div>
             <div id="urlImportGroup" class="form-group" style="display: none;">
               <label for="importUrl" class="form-label">CSV URL</label>
-              <input type="text" id="importUrl" class="form-control"
-                placeholder="https://example.com/flashcards.csv">
+              <input type="text" id="importUrl" class="form-control" placeholder="https://example.com/flashcards.csv">
             </div>
             <button id="importBtn" class="btn btn-primary btn-block">
               <i class="fas fa-upload"></i> Import Flashcards
@@ -726,8 +744,7 @@
             </div>
             <div class="form-group">
               <label for="exportName" class="form-label">File Name</label>
-              <input type="text" id="exportName" class="form-control"
-                value="my_flashcards">
+              <input type="text" id="exportName" class="form-control" value="my_flashcards">
             </div>
             <button id="exportBtn" class="btn btn-success btn-block">
               <i class="fas fa-download"></i> Export Flashcards
@@ -757,12 +774,10 @@
         <a href="https://wasim-cusit.github.io/MR-MUHAMMAD-WASIM/" target="_blank" class="footer-link">
           <i class="fas fa-globe"></i> MR-MUHAMMAD-WASIM
         </a>
-        <a href="https://www.linkedin.com/in/wasim13257" target="_blank"
-          class="footer-link">
+        <a href="https://www.linkedin.com/in/wasim13257" target="_blank" class="footer-link">
           <i class="fab fa-linkedin"></i> MUHAMMAD WASIM
         </a>
-        <a href="https://github.com/wasim-cusit" target="_blank"
-          class="footer-link">
+        <a href="https://github.com/wasim-cusit" target="_blank" class="footer-link">
           <i class="fab fa-github"></i> wasim-cusit
         </a>
       </div>
@@ -771,6 +786,7 @@
         "Engineering solutions that bridge innovation and functionality."
       </div>
     </footer>
+
     <script>
     // =============================================
     // App State Management
@@ -786,7 +802,13 @@
     let currentCardIndex = 0;
     
     // Recently added cards (for display in add tab)
-    let recentCards = [];
+    let recentCards = JSON.parse(localStorage.getItem('recentCards')) || [];
+
+    // Study session statistics
+    let correctCount = 0;
+    let failedCount = 0;
+    let seenCount = 0;
+    let totalAttempts = 0;
 
     // =============================================
     // DOM Element References
@@ -805,12 +827,23 @@
     const frontImage = document.getElementById('frontImage');
     const backImage = document.getElementById('backImage');
     const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
+    const neutralNextBtn = document.getElementById('neutralNextBtn');
+    const knowBtn = document.getElementById('knowBtn');
+    const failBtn = document.getElementById('failBtn');
     const progressContainer = document.getElementById('progressContainer');
     const progressText = document.getElementById('progressText');
     const progressPercent = document.getElementById('progressPercent');
     const progressBar = document.getElementById('progressBar');
     const emptyStudyState = document.getElementById('emptyStudyState');
+    const cardContent = document.getElementById('cardContent');
+    
+    // Results elements
+    const resultsContainer = document.getElementById('resultsContainer');
+    const correctCountElement = document.getElementById('correctCount');
+    const failedCountElement = document.getElementById('failedCount');
+    const seenCountElement = document.getElementById('seenCount');
+    const masteryRateElement = document.getElementById('masteryRate');
+    const successRateElement = document.getElementById('successRate');
     
     // Header stats elements
     const totalCardsElement = document.getElementById('totalCards').querySelector('span');
@@ -824,6 +857,8 @@
     const backImageInput = document.getElementById('backImageInput');
     const frontImagePreview = document.getElementById('frontImagePreview');
     const backImagePreview = document.getElementById('backImagePreview');
+    const recentCardsContainer = document.getElementById('recentCards');
+    const recentCardsList = document.getElementById('recentCardsList');
     
     // Import/export elements
     const importTypeSelect = document.getElementById('importType');
@@ -840,8 +875,6 @@
     const fab = document.getElementById('fab');
     const toast = document.getElementById('toast');
     const toastMessage = document.getElementById('toastMessage');
-    const recentCardsContainer = document.getElementById('recentCards');
-    const recentCardsList = document.getElementById('recentCardsList');
 
     // =============================================
     // Initialization
@@ -883,7 +916,9 @@
       // Card controls
       cardViewer.addEventListener('click', flipCard);
       prevBtn.addEventListener('click', prevCard);
-      nextBtn.addEventListener('click', markAsMastered);
+      neutralNextBtn.addEventListener('click', neutralNext);
+      knowBtn.addEventListener('click', markAsMastered);
+      failBtn.addEventListener('click', markAsFailed);
 
       // Add card form
       addCardBtn.addEventListener('click', addFlashcard);
@@ -981,6 +1016,30 @@
     }
     
     /**
+     * Neutral next (just advances without scoring)
+     */
+    function neutralNext() {
+      if (flashcards.length === 0) return;
+      
+      seenCount++;
+      updateResults();
+      nextCard();
+    }
+    
+    /**
+     * Mark current card as failed and go to next card
+     */
+    function markAsFailed() {
+      if (flashcards.length === 0) return;
+      
+      failedCount++;
+      seenCount++;
+      totalAttempts++;
+      updateResults();
+      nextCard();
+    }
+    
+    /**
      * Mark current card as mastered and go to next card
      */
     function markAsMastered() {
@@ -989,8 +1048,12 @@
       const cardId = currentCardIndex;
       if (!masteredCards.includes(cardId)) {
         masteredCards.push(cardId);
+        correctCount++;
+        seenCount++;
+        totalAttempts++;
         saveData();
         updateStats();
+        updateResults();
       }
       
       nextCard();
@@ -1127,6 +1190,24 @@
       progressText.textContent = `${mastered}/${total} cards mastered`;
       progressPercent.textContent = `${percent}%`;
       progressBar.style.width = `${percent}%`;
+    }
+    
+    /**
+     * Update the study results display
+     */
+    function updateResults() {
+      const masteryRate = Math.round((masteredCards.length / flashcards.length) * 100) || 0;
+      const successRate = totalAttempts > 0 ? Math.round((correctCount / totalAttempts) * 100) : 0;
+      
+      // Update all counters
+      correctCountElement.textContent = correctCount;
+      failedCountElement.textContent = failedCount;
+      seenCountElement.textContent = seenCount;
+      masteryRateElement.textContent = masteryRate;
+      successRateElement.textContent = successRate;
+      
+      // Show results container if we have any activity
+      resultsContainer.style.display = seenCount > 0 ? 'block' : 'none';
     }
     
     /**
@@ -1488,6 +1569,6 @@
 
     // Initialize the app when DOM is loaded
     document.addEventListener('DOMContentLoaded', init);
-  </script>
+    </script>
   </body>
 </html>
