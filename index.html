@@ -248,7 +248,7 @@
       display: block;
       width: 100%;
     }
-    
+/*     
     .card-viewer {
       background: white;
       border-radius: 10px;
@@ -270,7 +270,39 @@
       transition: transform 0.6s;
       transform-style: preserve-3d;
     }
-    
+     */
+
+    .card-viewer {
+  perspective: 1000px;
+}
+
+.card-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.card-content.flip-card {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-face {
+  transform: rotateY(180deg);
+}
+/*     end */
     .card-text {
       font-size: 1.5rem;
       margin-bottom: 1rem;
@@ -516,7 +548,7 @@
     </div>
 
     <!-- Study Tab -->
-    <div id="study" class="tab-content active">
+<!--     <div id="study" class="tab-content active">
       <div id="cardViewer" class="card-viewer" style="display: none;">
         <div id="cardContent" class="card-content">
           <div id="cardText" class="card-text"></div>
@@ -530,7 +562,29 @@
             <i class="fas fa-check"></i> Know It
           </button>
         </div>
-      </div>
+      </div> -->
+<!--     new code is start from here -->
+    <div id="cardViewer" class="card-viewer" style="display: none;">
+  <div id="cardContent" class="card-content">
+    <div class="card-face front-face">
+      <div id="frontText" class="card-text"></div>
+      <img id="frontImage" class="card-image" style="display: none;">
+    </div>
+    <div class="card-face back-face">
+      <div id="backText" class="card-text"></div>
+      <img id="backImage" class="card-image" style="display: none;">
+    </div>
+  </div>
+  <div class="card-controls">
+    <button id="prevBtn" class="btn btn-primary">
+      <i class="fas fa-arrow-left"></i> Previous
+    </button>
+    <button id="nextBtn" class="btn btn-success">
+      <i class="fas fa-check"></i> Know It
+    </button>
+  </div>
+</div>
+<!--     end here -->
       
       <div id="progressContainer" class="progress-container" style="display: none;">
         <div class="progress-info">
@@ -899,7 +953,7 @@
       updateProgress();
     }
 
-    // Update card display based on current side
+    // // Update card display based on current side
     // function updateCardDisplay() {
     //   const card = flashcards[currentCardIndex];
       
@@ -921,41 +975,51 @@
     //     }
     //   }
     // }
-    // new code added here 
+
     // Update card display based on current side
 function updateCardDisplay() {
   const card = flashcards[currentCardIndex];
   
-  if (isFrontVisible) {
-    cardText.textContent = card.front || '';
-    if (card.frontImage) {
-      cardImage.src = card.frontImage;
-      cardImage.style.display = 'block';
-    } else {
-      cardImage.style.display = 'none';
-    }
+  // Front side
+  frontText.textContent = card.front || '';
+  if (card.frontImage) {
+    frontImage.src = card.frontImage;
+    frontImage.style.display = 'block';
   } else {
-    cardText.textContent = card.back || '';
-    if (card.backImage) {
-      cardImage.src = card.backImage;
-      cardImage.style.display = 'block';
-    } else {
-      cardImage.style.display = 'none';
-    }
+    frontImage.style.display = 'none';
+  }
+  
+  // Back side
+  backText.textContent = card.back || '';
+  if (card.backImage) {
+    backImage.src = card.backImage;
+    backImage.style.display = 'block';
+  } else {
+    backImage.style.display = 'none';
   }
 }
 
-    // Flip the current card
-    function flipCard(e) {
-      // Don't flip if clicked on navigation buttons
-      if (e && (e.target.closest('.card-controls') || e.target.classList.contains('card-controls'))) {
-        return;
-      }
+// Flip the current card
+function flipCard(e) {
+  // Don't flip if clicked on navigation buttons
+  if (e && (e.target.closest('.card-controls') || e.target.classList.contains('card-controls'))) {
+    return;
+  }
+  
+  cardContent.classList.toggle('flip-card');
+}
+
+    // // Flip the current card
+    // function flipCard(e) {
+    //   // Don't flip if clicked on navigation buttons
+    //   if (e && (e.target.closest('.card-controls') || e.target.classList.contains('card-controls'))) {
+    //     return;
+    //   }
       
-      isFrontVisible = !isFrontVisible;
-      cardContent.classList.toggle('flip-card');
-      setTimeout(updateCardDisplay, 300); // Match with CSS transition
-    }
+    //   isFrontVisible = !isFrontVisible;
+    //   cardContent.classList.toggle('flip-card');
+    //   setTimeout(updateCardDisplay, 300); // Match with CSS transition
+    // }
 
     // Go to previous card
     function prevCard() {
