@@ -900,27 +900,50 @@
     }
 
     // Update card display based on current side
-    function updateCardDisplay() {
-      const card = flashcards[currentCardIndex];
+    // function updateCardDisplay() {
+    //   const card = flashcards[currentCardIndex];
       
-      if (isFrontVisible) {
-        cardText.textContent = card.front || '';
-        if (card.frontImage) {
-          cardImage.src = card.frontImage;
-          cardImage.style.display = 'block';
-        } else {
-          cardImage.style.display = 'none';
-        }
-      } else {
-        cardText.textContent = card.back || '';
-        if (card.backImage) {
-          cardImage.src = card.backImage;
-          cardImage.style.display = 'block';
-        } else {
-          cardImage.style.display = 'none';
-        }
-      }
+    //   if (isFrontVisible) {
+    //     cardText.textContent = card.front || '';
+    //     if (card.frontImage) {
+    //       cardImage.src = card.frontImage;
+    //       cardImage.style.display = 'block';
+    //     } else {
+    //       cardImage.style.display = 'none';
+    //     }
+    //   } else {
+    //     cardText.textContent = card.back || '';
+    //     if (card.backImage) {
+    //       cardImage.src = card.backImage;
+    //       cardImage.style.display = 'block';
+    //     } else {
+    //       cardImage.style.display = 'none';
+    //     }
+    //   }
+    // }
+    // new code added here 
+    // Update card display based on current side
+function updateCardDisplay() {
+  const card = flashcards[currentCardIndex];
+  
+  if (isFrontVisible) {
+    cardText.textContent = card.front || '';
+    if (card.frontImage) {
+      cardImage.src = card.frontImage;
+      cardImage.style.display = 'block';
+    } else {
+      cardImage.style.display = 'none';
     }
+  } else {
+    cardText.textContent = card.back || '';
+    if (card.backImage) {
+      cardImage.src = card.backImage;
+      cardImage.style.display = 'block';
+    } else {
+      cardImage.style.display = 'none';
+    }
+  }
+}
 
     // Flip the current card
     function flipCard(e) {
