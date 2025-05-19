@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flashcard Master</title>
-  <style>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard Master</title>
+    <style>
     :root {
       --primary: #4361ee;
       --secondary: #3f37c9;
@@ -269,12 +269,14 @@
       text-align: center;
       transition: transform 0.6s;
       transform-style: preserve-3d;
+      position: relative;
     }
     
     .card-text {
       font-size: 1.5rem;
       margin-bottom: 1rem;
       word-break: break-word;
+      backface-visibility: hidden;
     }
     
     .card-image {
@@ -283,6 +285,7 @@
       border-radius: 6px;
       margin: 0 auto 1rem;
       display: block;
+      backface-visibility: hidden;
     }
     
     .card-controls {
@@ -426,7 +429,7 @@
     
     /* Flip animation */
     .flip-card {
-      transform: rotateY(0deg);
+      transform: rotateY(180deg);
     }
     
     /* Toast notifications */
@@ -454,6 +457,73 @@
     .toast i {
       margin-right: 8px;
     }
+
+
+    /* About my footer */
+    .footer {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid #e1e1e1;
+            margin-top: 40px;
+        }
+        
+        .footer-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .footer-title {
+            font-size: 1rem;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-link {
+            display: flex;
+            align-items: center;
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-link:hover {
+            color: #2980b9;
+        }
+        
+        .footer-link i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .footer-quote {
+            font-style: italic;
+            color: #555;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 20px;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 600px) {
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
     
     /* Responsive adjustments */
     @media (max-width: 576px) {
@@ -480,196 +550,259 @@
       }
     }
   </style>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-</head>
-<body>
-  <header>
-    <div class="container header-content">
-      <div class="logo">
-        <i class="fas fa-layer-group"></i>
-        <span>Flashcard Master</span>
-      </div>
-      <div class="stats">
-        <div class="stat-item" id="totalCards">
-          <i class="fas fa-copy"></i>
-          <span>0</span>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet">
+  </head>
+  <body>
+    <header>
+      <div class="container header-content">
+        <div class="logo">
+          <i class="fas fa-layer-group"></i>
+          <span>Flashcard Master</span>
         </div>
-        <div class="stat-item" id="completedCards">
-          <i class="fas fa-check-circle"></i>
-          <span>0</span>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <main class="container">
-    <div class="tabs">
-      <div class="tab active" data-tab="study">
-        <i class="fas fa-book-open"></i> Study
-      </div>
-      <div class="tab" data-tab="add">
-        <i class="fas fa-plus-circle"></i> Add Cards
-      </div>
-      <div class="tab" data-tab="import-export">
-        <i class="fas fa-exchange-alt"></i> Import/Export
-      </div>
-    </div>
-
-    <!-- Study Tab -->
-    <div id="study" class="tab-content active">
-      <div id="cardViewer" class="card-viewer" style="display: none;">
-        <div id="cardContent" class="card-content">
-          <div id="cardText" class="card-text"></div>
-          <img id="cardImage" class="card-image" style="display: none;">
-        </div>
-        <div class="card-controls">
-          <button id="prevBtn" class="btn btn-primary">
-            <i class="fas fa-arrow-left"></i> Previous
-          </button>
-          <button id="nextBtn" class="btn btn-success">
-            <i class="fas fa-check"></i> Know It
-          </button>
-        </div>
-      </div>      
-      <div id="progressContainer" class="progress-container" style="display: none;">
-        <div class="progress-info">
-          <span id="progressText">0/0 cards mastered</span>
-          <span id="progressPercent">0%</span>
-        </div>
-        <div class="progress-bar">
-          <div id="progressBar" class="progress-bar-fill" style="width: 0%"></div>
-        </div>
-      </div>
-      
-      <div id="emptyStudyState" class="empty-state">
-        <i class="fas fa-book-open fa-3x"></i>
-        <h3>No Flashcards Available</h3>
-        <p>Add some flashcards to get started!</p>
-        <button class="btn btn-primary mt-3" onclick="switchTab('add')">
-          <i class="fas fa-plus"></i> Add Flashcards
-        </button>
-      </div>
-    </div>
-
-    <!-- Add Card Tab -->
-    <div id="add" class="tab-content">
-      <div class="card-form">
-        <h3 class="section-title">
-          <i class="fas fa-plus-circle"></i> Create New Flashcard
-        </h3>
-        <div class="form-group">
-          <label for="front" class="form-label">Front (Question)</label>
-          <input type="text" id="front" class="form-control" placeholder="Enter question or term">
-        </div>
-        <div class="form-group">
-          <label for="frontImage" class="form-label">Front Image (Optional)</label>
-          <input type="file" id="frontImage" class="form-control" accept="image/*">
-          <div class="image-preview-container">
-            <img id="frontImagePreview" class="image-preview">
+        <div class="stats">
+          <div class="stat-item" id="totalCards">
+            <i class="fas fa-copy"></i>
+            <span>0</span>
+          </div>
+          <div class="stat-item" id="completedCards">
+            <i class="fas fa-check-circle"></i>
+            <span>0</span>
           </div>
         </div>
-        <div class="form-group">
-          <label for="back" class="form-label">Back (Answer)</label>
-          <textarea id="back" class="form-control" placeholder="Enter answer or definition"></textarea>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="tabs">
+        <div class="tab active" data-tab="study">
+          <i class="fas fa-book-open"></i> Study
         </div>
-        <div class="form-group">
-          <label for="backImage" class="form-label">Back Image (Optional)</label>
-          <input type="file" id="backImage" class="form-control" accept="image/*">
-          <div class="image-preview-container">
-            <img id="backImagePreview" class="image-preview">
+        <div class="tab" data-tab="add">
+          <i class="fas fa-plus-circle"></i> Add Cards
+        </div>
+        <div class="tab" data-tab="import-export">
+          <i class="fas fa-exchange-alt"></i> Import/Export
+        </div>
+      </div>
+
+      <!-- Study Tab -->
+      <div id="study" class="tab-content active">
+        <div id="cardViewer" class="card-viewer" style="display: none;">
+          <div id="cardContent" class="card-content">
+            <div id="frontContent" class="card-side">
+              <div id="frontText" class="card-text"></div>
+              <img id="frontImage" class="card-image" style="display: none;">
+            </div>
+            <div id="backContent" class="card-side"
+              style="display: none; transform: rotateY(0deg);">
+              <div id="backText" class="card-text"></div>
+              <img id="backImage" class="card-image" style="display: none;">
+            </div>
+          </div>
+          <div class="card-controls">
+            <button id="prevBtn" class="btn btn-primary">
+              <i class="fas fa-arrow-left"></i> Previous
+            </button>
+            <button id="nextBtn" class="btn btn-success">
+              <i class="fas fa-check"></i> Know It
+            </button>
           </div>
         </div>
-        <button id="addCardBtn" class="btn btn-primary btn-block">
-          <i class="fas fa-save"></i> Save Flashcard
-        </button>
-      </div>
-      
-      <div id="recentCards" style="display: none;">
-        <h3 class="section-title">
-          <i class="fas fa-history"></i> Recently Added
-        </h3>
-        <div id="recentCardsList" class="card-viewer">
-          <!-- Recent cards will be added here -->
+        <div id="progressContainer" class="progress-container"
+          style="display: none;">
+          <div class="progress-info">
+            <span id="progressText">0/0 cards mastered</span>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="progress-bar">
+            <div id="progressBar" class="progress-bar-fill"
+              style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div id="emptyStudyState" class="empty-state">
+          <i class="fas fa-book-open fa-3x"></i>
+          <h3>No Flashcards Available</h3>
+          <p>Add some flashcards to get started!</p>
+          <button class="btn btn-primary mt-3" onclick="switchTab('add')">
+            <i class="fas fa-plus"></i> Add Flashcards
+          </button>
         </div>
       </div>
-    </div>
 
-    <!-- Import/Export Tab -->
-    <div id="import-export" class="tab-content">
-      <div class="import-export">
-        <div class="import-box">
+      <!-- Add Card Tab -->
+      <div id="add" class="tab-content">
+        <div class="card-form">
           <h3 class="section-title">
-            <i class="fas fa-file-import"></i> Import Flashcards
+            <i class="fas fa-plus-circle"></i> Create New Flashcard
           </h3>
           <div class="form-group">
-            <label for="importType" class="form-label">Import From</label>
-            <select id="importType" class="form-control">
-              <option value="file">CSV File</option>
-              <option value="url">CSV URL</option>
-              <option value="json">JSON File</option>
-            </select>
+            <label for="front" class="form-label">Front (Question)</label>
+            <input type="text" id="front" class="form-control"
+              placeholder="Enter question or term">
           </div>
-          <div id="fileImportGroup" class="form-group">
-            <label for="importFile" class="form-label">Select File</label>
-            <input type="file" id="importFile" class="form-control" accept=".csv,.json">
+          <div class="form-group">
+            <label for="frontImage" class="form-label">Front Image
+              (Optional)</label>
+            <input type="file" id="frontImageInput" class="form-control"
+              accept="image/*">
+            <div class="image-preview-container">
+              <img id="frontImagePreview" class="image-preview">
+            </div>
           </div>
-          <div id="urlImportGroup" class="form-group" style="display: none;">
-            <label for="importUrl" class="form-label">CSV URL</label>
-            <input type="text" id="importUrl" class="form-control" placeholder="https://example.com/flashcards.csv">
+          <div class="form-group">
+            <label for="back" class="form-label">Back (Answer)</label>
+            <textarea id="back" class="form-control"
+              placeholder="Enter answer or definition"></textarea>
           </div>
-          <button id="importBtn" class="btn btn-primary btn-block">
-            <i class="fas fa-upload"></i> Import Flashcards
+          <div class="form-group">
+            <label for="backImage" class="form-label">Back Image
+              (Optional)</label>
+            <input type="file" id="backImageInput" class="form-control"
+              accept="image/*">
+            <div class="image-preview-container">
+              <img id="backImagePreview" class="image-preview">
+            </div>
+          </div>
+          <button id="addCardBtn" class="btn btn-primary btn-block">
+            <i class="fas fa-save"></i> Save Flashcard
           </button>
         </div>
-        
-        <div class="export-box">
+
+        <div id="recentCards" style="display: none;">
           <h3 class="section-title">
-            <i class="fas fa-file-export"></i> Export Flashcards
+            <i class="fas fa-history"></i> Recently Added
           </h3>
-          <div class="form-group">
-            <label for="exportType" class="form-label">Export Format</label>
-            <select id="exportType" class="form-control">
-              <option value="csv">CSV (Excel compatible)</option>
-              <option value="json">JSON</option>
-              <option value="anki">Anki Package</option>
-            </select>
+          <div id="recentCardsList" class="card-viewer">
+            <!-- Recent cards will be added here -->
           </div>
-          <div class="form-group">
-            <label for="exportName" class="form-label">File Name</label>
-            <input type="text" id="exportName" class="form-control" value="my_flashcards">
-          </div>
-          <button id="exportBtn" class="btn btn-success btn-block">
-            <i class="fas fa-download"></i> Export Flashcards
-          </button>
         </div>
       </div>
+
+      <!-- Import/Export Tab -->
+      <div id="import-export" class="tab-content">
+        <div class="import-export">
+          <div class="import-box">
+            <h3 class="section-title">
+              <i class="fas fa-file-import"></i> Import Flashcards
+            </h3>
+            <div class="form-group">
+              <label for="importType" class="form-label">Import From</label>
+              <select id="importType" class="form-control">
+                <option value="file">CSV File</option>
+                <option value="url">CSV URL</option>
+                <option value="json">JSON File</option>
+              </select>
+            </div>
+            <div id="fileImportGroup" class="form-group">
+              <label for="importFile" class="form-label">Select File</label>
+              <input type="file" id="importFile" class="form-control"
+                accept=".csv,.json">
+            </div>
+            <div id="urlImportGroup" class="form-group" style="display: none;">
+              <label for="importUrl" class="form-label">CSV URL</label>
+              <input type="text" id="importUrl" class="form-control"
+                placeholder="https://example.com/flashcards.csv">
+            </div>
+            <button id="importBtn" class="btn btn-primary btn-block">
+              <i class="fas fa-upload"></i> Import Flashcards
+            </button>
+          </div>
+
+          <div class="export-box">
+            <h3 class="section-title">
+              <i class="fas fa-file-export"></i> Export Flashcards
+            </h3>
+            <div class="form-group">
+              <label for="exportType" class="form-label">Export Format</label>
+              <select id="exportType" class="form-control">
+                <option value="csv">CSV (Excel compatible)</option>
+                <option value="json">JSON</option>
+                <option value="anki">Anki Package</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="exportName" class="form-label">File Name</label>
+              <input type="text" id="exportName" class="form-control"
+                value="my_flashcards">
+            </div>
+            <button id="exportBtn" class="btn btn-success btn-block">
+              <i class="fas fa-download"></i> Export Flashcards
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div id="fab" class="floating-action-btn pulse" title="Add new flashcard">
+      <i class="fas fa-plus"></i>
     </div>
-  </main>
 
-  <div id="fab" class="floating-action-btn pulse" title="Add new flashcard">
-    <i class="fas fa-plus"></i>
-  </div>
+    <div id="toast" class="toast">
+      <i class="fas fa-check-circle"></i>
+      <span id="toastMessage">Flashcard added successfully!</span>
+    </div>
 
-  <div id="toast" class="toast">
-    <i class="fas fa-check-circle"></i>
-    <span id="toastMessage">Flashcard added successfully!</span>
-  </div>
+    <footer class="footer">
+      <div class="footer-name">MUHAMMAD WASIM</div>
+      <div class="footer-title">Software Engineer</div>
 
-  <script>
-    // App state
+      <div class="footer-links">
+        <a href="mailto:muhammadwasim.cusit@gmail.com" class="footer-link">
+          <i class="fas fa-envelope"></i> muhammadwasim.cusit@gmail.com
+        </a>
+        <a href="https://wasim-cusit.github.io/MR-MUHAMMAD-WASIM/" target="_blank" class="footer-link">
+          <i class="fas fa-globe"></i> MR-MUHAMMAD-WASIM
+        </a>
+        <a href="https://www.linkedin.com/in/wasim13257" target="_blank"
+          class="footer-link">
+          <i class="fab fa-linkedin"></i> MUHAMMAD WASIM
+        </a>
+        <a href="https://github.com/wasim-cusit" target="_blank"
+          class="footer-link">
+          <i class="fab fa-github"></i> wasim-cusit
+        </a>
+      </div>
+
+      <div class="footer-quote">
+        "Engineering solutions that bridge innovation and functionality."
+      </div>
+    </footer>
+    <script>
+    // =============================================
+    // App State Management
+    // =============================================
+    
+    // Main flashcards array with all cards
     let flashcards = JSON.parse(localStorage.getItem('flashcards')) || [];
+    
+    // Array of indices for mastered cards
     let masteredCards = JSON.parse(localStorage.getItem('masteredCards')) || [];
+    
+    // Current card index being viewed
     let currentCardIndex = 0;
-    let isFrontVisible = true;
+    
+    // Recently added cards (for display in add tab)
     let recentCards = [];
 
-    // DOM elements
+    // =============================================
+    // DOM Element References
+    // =============================================
+    
+    // Tab navigation elements
     const tabButtons = document.querySelectorAll('.tab');
     const tabContents = document.querySelectorAll('.tab-content');
+    
+    // Study tab elements
     const cardViewer = document.getElementById('cardViewer');
-    const cardContent = document.getElementById('cardContent');
-    const cardText = document.getElementById('cardText');
-    const cardImage = document.getElementById('cardImage');
+    const frontContent = document.getElementById('frontContent');
+    const backContent = document.getElementById('backContent');
+    const frontText = document.getElementById('frontText');
+    const backText = document.getElementById('backText');
+    const frontImage = document.getElementById('frontImage');
+    const backImage = document.getElementById('backImage');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     const progressContainer = document.getElementById('progressContainer');
@@ -677,15 +810,21 @@
     const progressPercent = document.getElementById('progressPercent');
     const progressBar = document.getElementById('progressBar');
     const emptyStudyState = document.getElementById('emptyStudyState');
+    
+    // Header stats elements
     const totalCardsElement = document.getElementById('totalCards').querySelector('span');
     const completedCardsElement = document.getElementById('completedCards').querySelector('span');
+    
+    // Add card form elements
     const addCardBtn = document.getElementById('addCardBtn');
     const frontInput = document.getElementById('front');
     const backInput = document.getElementById('back');
-    const frontImageInput = document.getElementById('frontImage');
-    const backImageInput = document.getElementById('backImage');
+    const frontImageInput = document.getElementById('frontImageInput');
+    const backImageInput = document.getElementById('backImageInput');
     const frontImagePreview = document.getElementById('frontImagePreview');
     const backImagePreview = document.getElementById('backImagePreview');
+    
+    // Import/export elements
     const importTypeSelect = document.getElementById('importType');
     const fileImportGroup = document.getElementById('fileImportGroup');
     const urlImportGroup = document.getElementById('urlImportGroup');
@@ -695,13 +834,21 @@
     const exportBtn = document.getElementById('exportBtn');
     const exportTypeSelect = document.getElementById('exportType');
     const exportNameInput = document.getElementById('exportName');
+    
+    // Other UI elements
     const fab = document.getElementById('fab');
     const toast = document.getElementById('toast');
     const toastMessage = document.getElementById('toastMessage');
     const recentCardsContainer = document.getElementById('recentCards');
     const recentCardsList = document.getElementById('recentCardsList');
 
-    // Initialize the app
+    // =============================================
+    // Initialization
+    // =============================================
+    
+    /**
+     * Initialize the application when DOM is loaded
+     */
     function init() {
       updateStats();
       setupEventListeners();
@@ -716,7 +863,13 @@
       }
     }
 
-    // Set up event listeners
+    // =============================================
+    // Event Listeners Setup
+    // =============================================
+    
+    /**
+     * Set up all event listeners for the application
+     */
     function setupEventListeners() {
       // Tab navigation
       tabButtons.forEach(button => {
@@ -733,8 +886,8 @@
 
       // Add card form
       addCardBtn.addEventListener('click', addFlashcard);
-      frontImageInput.addEventListener('change', handleImageUpload.bind(null, frontImagePreview));
-      backImageInput.addEventListener('change', handleImageUpload.bind(null, backImagePreview));
+      frontImageInput.addEventListener('change', () => handleImageUpload(frontImagePreview, frontImageInput));
+      backImageInput.addEventListener('change', () => handleImageUpload(backImagePreview, backImageInput));
 
       // Import/export
       importTypeSelect.addEventListener('change', toggleImportMethod);
@@ -748,78 +901,124 @@
       document.addEventListener('keydown', handleKeyboardShortcuts);
     }
 
-    // Handle keyboard shortcuts
-    function handleKeyboardShortcuts(e) {
-      // Only handle shortcuts when study tab is active
-      if (!document.getElementById('study').classList.contains('active')) return;
-
-      switch(e.key) {
-        case 'ArrowLeft':
-          prevCard();
-          break;
-        case 'ArrowRight':
-        case ' ':
-          markAsMastered();
-          break;
-        case 'ArrowUp':
-        case 'ArrowDown':
-          flipCard();
-          break;
+    // =============================================
+    // Core Flashcard Functionality
+    // =============================================
+    
+    /**
+     * Show the current flashcard in the viewer
+     */
+    function showCard() {
+      if (flashcards.length === 0) {
+        cardViewer.style.display = 'none';
+        progressContainer.style.display = 'none';
+        return;
       }
-    }
 
-    // Switch between tabs
-    function switchTab(tabId) {
-      // Hide all tab contents
-      tabContents.forEach(content => {
-        content.classList.remove('active');
-      });
-
-      // Deactivate all tab buttons
-      tabButtons.forEach(button => {
-        button.classList.remove('active');
-      });
-
-      // Show selected tab content
-      document.getElementById(tabId).classList.add('active');
-
-      // Activate selected tab button
-      document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add('active');
-
-      // Special handling for study tab
-      if (tabId === 'study' && flashcards.length > 0) {
-        showCard();
+      const card = flashcards[currentCardIndex];
+      
+      cardViewer.style.display = 'flex';
+      progressContainer.style.display = 'block';
+      
+      // Always reset to front view when showing new card
+      frontContent.style.display = 'block';
+      backContent.style.display = 'none';
+      
+      // Update front side content
+      frontText.textContent = card.front || '';
+      if (card.frontImage) {
+        frontImage.src = card.frontImage;
+        frontImage.style.display = 'block';
+      } else {
+        frontImage.style.display = 'none';
       }
-    }
-
-    // Toggle import method between file and URL
-    function toggleImportMethod() {
-      const importType = importTypeSelect.value;
-      fileImportGroup.style.display = importType === 'file' || importType === 'json' ? 'block' : 'none';
-      urlImportGroup.style.display = importType === 'url' ? 'block' : 'none';
-    }
-
-    // Handle image upload and preview
-    function handleImageUpload(previewElement, e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-          previewElement.src = event.target.result;
-          previewElement.style.display = 'block';
-        };
-        reader.readAsDataURL(file);
+      
+      // Update back side content
+      backText.textContent = card.back || '';
+      if (card.backImage) {
+        backImage.src = card.backImage;
+        backImage.style.display = 'block';
+      } else {
+        backImage.style.display = 'none';
       }
+      
+      updateProgress();
+    }
+    
+    /**
+     * Flip the current card to show the other side
+     */
+    function flipCard(e) {
+      // Don't flip if clicked on navigation buttons
+      if (e && (e.target.closest('.card-controls') || e.target.classList.contains('card-controls'))) {
+        return;
+      }
+      
+      if (frontContent.style.display === 'block') {
+        frontContent.style.display = 'none';
+        backContent.style.display = 'block';
+      } else {
+        frontContent.style.display = 'block';
+        backContent.style.display = 'none';
+      }
+      
+      // Add flip animation
+      cardContent.classList.add('flip-card');
+      setTimeout(() => {
+        cardContent.classList.remove('flip-card');
+      }, 600);
+    }
+    
+    /**
+     * Navigate to the previous card
+     */
+    function prevCard() {
+      if (flashcards.length === 0) return;
+      
+      currentCardIndex = (currentCardIndex - 1 + flashcards.length) % flashcards.length;
+      showCard();
+    }
+    
+    /**
+     * Mark current card as mastered and go to next card
+     */
+    function markAsMastered() {
+      if (flashcards.length === 0) return;
+      
+      const cardId = currentCardIndex;
+      if (!masteredCards.includes(cardId)) {
+        masteredCards.push(cardId);
+        saveData();
+        updateStats();
+      }
+      
+      nextCard();
+    }
+    
+    /**
+     * Navigate to the next card
+     */
+    function nextCard() {
+      if (flashcards.length === 0) return;
+      
+      currentCardIndex = (currentCardIndex + 1) % flashcards.length;
+      showCard();
     }
 
-    // Add a new flashcard
+    // =============================================
+    // Card Management
+    // =============================================
+    
+    /**
+     * Add a new flashcard to the collection
+     */
     function addFlashcard() {
       const front = frontInput.value.trim();
       const back = backInput.value.trim();
       const frontImageFile = frontImageInput.files[0];
       const backImageFile = backImageInput.files[0];
 
-      // Validate input
+      // Validate input - each side must have either text or image
       if ((!front && !frontImageFile) || (!back && !backImageFile)) {
         showToast('Each side must have either text or image!', 'error');
         return;
@@ -852,8 +1051,11 @@
 
       processImages();
     }
-
-    // Final check and add card to collection
+    
+    /**
+     * Final check and add card to collection after processing images
+     * @param {Object} card - The flashcard object to add
+     */
     function checkAndAddCard(card) {
       // Only add if we have all required data
       if ((card.front || card.frontImage) && (card.back || card.backImage)) {
@@ -869,8 +1071,10 @@
         checkEmptyState();
       }
     }
-
-    // Reset the add card form
+    
+    /**
+     * Reset the add card form to its initial state
+     */
     function resetForm() {
       frontInput.value = '';
       backInput.value = '';
@@ -880,94 +1084,40 @@
       backImagePreview.style.display = 'none';
     }
 
-    // Show current card
-    function showCard() {
-      if (flashcards.length === 0) {
-        cardViewer.style.display = 'none';
-        progressContainer.style.display = 'none';
-        return;
-      }
+    // =============================================
+    // UI State Management
+    // =============================================
+    
+    /**
+     * Switch between application tabs
+     * @param {string} tabId - The ID of the tab to switch to
+     */
+    function switchTab(tabId) {
+      // Hide all tab contents
+      tabContents.forEach(content => {
+        content.classList.remove('active');
+      });
 
-      const card = flashcards[currentCardIndex];
-      isFrontVisible = true;
-      
-      cardViewer.style.display = 'flex';
-      progressContainer.style.display = 'block';
-      
-      updateCardDisplay();
-      updateProgress();
-    }
+      // Deactivate all tab buttons
+      tabButtons.forEach(button => {
+        button.classList.remove('active');
+      });
 
-    // // Update card display based on current side
-    function updateCardDisplay() {
-      const card = flashcards[currentCardIndex];
-      
-      if (isFrontVisible) {
-        cardText.textContent = card.front || '';
-        if (card.frontImage) {
-          cardImage.src = card.frontImage;
-          cardImage.style.display = 'block';
-        } else {
-          cardImage.style.display = 'none';
-        }
-      } else {
-        cardText.textContent = card.back || '';
-        if (card.backImage) {
-          cardImage.src = card.backImage;
-          cardImage.style.display = 'block';
-        } else {
-          cardImage.style.display = 'none';
-        }
+      // Show selected tab content
+      document.getElementById(tabId).classList.add('active');
+
+      // Activate selected tab button
+      document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add('active');
+
+      // Special handling for study tab
+      if (tabId === 'study' && flashcards.length > 0) {
+        showCard();
       }
     }
-
-    // Flip the current card
-    function flipCard(e) {
-      // Don't flip if clicked on navigation buttons
-      if (e && (e.target.closest('.card-controls') || e.target.classList.contains('card-controls'))) {
-        return;
-      }
-      
-      isFrontVisible = !isFrontVisible;
-      cardContent.classList.toggle('flip-card');
-      setTimeout(updateCardDisplay, 300); // Match with CSS transition
-    }
-
-    // Go to previous card
-    function prevCard() {
-      if (flashcards.length === 0) return;
-      
-      currentCardIndex = (currentCardIndex - 1 + flashcards.length) % flashcards.length;
-      isFrontVisible = true;
-      cardContent.classList.remove('flip-card');
-      showCard();
-    }
-
-    // Mark current card as mastered and go to next
-    function markAsMastered() {
-      if (flashcards.length === 0) return;
-      
-      const cardId = currentCardIndex;
-      if (!masteredCards.includes(cardId)) {
-        masteredCards.push(cardId);
-        localStorage.setItem('masteredCards', JSON.stringify(masteredCards));
-        updateStats();
-      }
-      
-      nextCard();
-    }
-
-    // Go to next card
-    function nextCard() {
-      if (flashcards.length === 0) return;
-      
-      currentCardIndex = (currentCardIndex + 1) % flashcards.length;
-      isFrontVisible = true;
-      cardContent.classList.remove('flip-card');
-      showCard();
-    }
-
-    // Update progress information
+    
+    /**
+     * Update the progress display with current mastery stats
+     */
     function updateProgress() {
       const total = flashcards.length;
       const mastered = masteredCards.length;
@@ -977,14 +1127,18 @@
       progressPercent.textContent = `${percent}%`;
       progressBar.style.width = `${percent}%`;
     }
-
-    // Update stats in header
+    
+    /**
+     * Update the stats in the header
+     */
     function updateStats() {
       totalCardsElement.textContent = flashcards.length;
       completedCardsElement.textContent = masteredCards.length;
     }
-
-    // Check if study view should show empty state
+    
+    /**
+     * Check if study view should show empty state
+     */
     function checkEmptyState() {
       if (flashcards.length === 0) {
         emptyStudyState.style.display = 'block';
@@ -996,8 +1150,10 @@
         progressContainer.style.display = 'block';
       }
     }
-
-    // Load recent cards for display
+    
+    /**
+     * Load recent cards for display in the add tab
+     */
     function loadRecentCards() {
       if (recentCards.length > 0) {
         recentCardsContainer.style.display = 'block';
@@ -1019,8 +1175,11 @@
         recentCardsContainer.style.display = 'none';
       }
     }
-
-    // Delete a recent card
+    
+    /**
+     * Delete a recent card from the collection
+     * @param {number} index - Index of the card in recentCards array
+     */
     function deleteRecentCard(index) {
       // Find the card in the main flashcards array and remove it
       const cardToDelete = recentCards[index];
@@ -1065,7 +1224,39 @@
       }
     }
 
-    // Handle import of flashcards
+    // =============================================
+    // Import/Export Functionality
+    // =============================================
+    
+    /**
+     * Toggle between file and URL import methods
+     */
+    function toggleImportMethod() {
+      const importType = importTypeSelect.value;
+      fileImportGroup.style.display = importType === 'file' || importType === 'json' ? 'block' : 'none';
+      urlImportGroup.style.display = importType === 'url' ? 'block' : 'none';
+    }
+    
+    /**
+     * Handle image upload and show preview
+     * @param {HTMLElement} previewElement - The image element to show preview in
+     * @param {HTMLInputElement} inputElement - The file input element
+     */
+    function handleImageUpload(previewElement, inputElement) {
+      const file = inputElement.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          previewElement.src = event.target.result;
+          previewElement.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+    
+    /**
+     * Handle importing flashcards from various sources
+     */
     async function handleImport() {
       const importType = importTypeSelect.value;
       
@@ -1101,8 +1292,12 @@
         showToast('Failed to import: ' + error.message, 'error');
       }
     }
-
-    // Process imported data (CSV or JSON)
+    
+    /**
+     * Process imported data (CSV or JSON format)
+     * @param {string} data - The imported data
+     * @param {string} type - The data format ('csv' or 'json')
+     */
     function processImportedData(data, type) {
       let newCards = [];
       
@@ -1155,8 +1350,10 @@
         showToast('Failed to process import: ' + error.message, 'error');
       }
     }
-
-    // Handle export of flashcards
+    
+    /**
+     * Handle exporting flashcards to various formats
+     */
     function handleExport() {
       if (flashcards.length === 0) {
         showToast('No flashcards to export', 'warning');
@@ -1197,27 +1394,24 @@
       }
     }
 
-    // Helper function to download files
-    function downloadFile(content, fileName, mimeType) {
-      const blob = new Blob([content], { type: mimeType });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-
-    // Save data to localStorage
+    // =============================================
+    // Utility Functions
+    // =============================================
+    
+    /**
+     * Save all data to localStorage
+     */
     function saveData() {
       localStorage.setItem('flashcards', JSON.stringify(flashcards));
       localStorage.setItem('masteredCards', JSON.stringify(masteredCards));
       localStorage.setItem('recentCards', JSON.stringify(recentCards));
     }
-
-    // Show toast notification
+    
+    /**
+     * Show a toast notification
+     * @param {string} message - The message to display
+     * @param {string} type - The type of toast ('success', 'error', 'warning', 'info')
+     */
     function showToast(message, type = 'success') {
       toastMessage.textContent = message;
       
@@ -1249,9 +1443,50 @@
         toast.classList.remove('show');
       }, 3000);
     }
+    
+    /**
+     * Download a file with given content
+     * @param {string} content - The file content
+     * @param {string} fileName - The name for the downloaded file
+     * @param {string} mimeType - The MIME type of the file
+     */
+    function downloadFile(content, fileName, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+    
+    /**
+     * Handle keyboard shortcuts for flashcard navigation
+     * @param {KeyboardEvent} e - The keyboard event
+     */
+    function handleKeyboardShortcuts(e) {
+      // Only handle shortcuts when study tab is active
+      if (!document.getElementById('study').classList.contains('active')) return;
+
+      switch(e.key) {
+        case 'ArrowLeft':
+          prevCard();
+          break;
+        case 'ArrowRight':
+        case ' ':
+          markAsMastered();
+          break;
+        case 'ArrowUp':
+        case 'ArrowDown':
+          flipCard();
+          break;
+      }
+    }
 
     // Initialize the app when DOM is loaded
     document.addEventListener('DOMContentLoaded', init);
   </script>
-</body>
+  </body>
 </html>
